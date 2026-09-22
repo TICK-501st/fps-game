@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operation Nightfall</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="game" aria-label="Operation Nightfall game"></canvas>
+    <section id="briefing" class="screen active">
+      <div class="briefing-card">
+        <p class="eyebrow">CLASSIFIED // TASK FORCE NEMESIS</p>
+        <h1>OPERATION<br><span>NIGHTFALL</span></h1>
+        <p class="mission-copy">Infiltrate the abandoned forward outpost, recover the intelligence drives, and eliminate hostile resistance before extraction.</p>
+        <div class="briefing-grid"><div><b>AO</b><span>Sector Kestrel</span></div><div><b>THREAT</b><span>Hostile patrols</span></div><div><b>STATUS</b><span>Blackout active</span></div></div>
+        <button id="start-btn">BEGIN OPERATION <span>ENTER</span></button>
+        <p class="controls">WASD MOVE &nbsp;•&nbsp; MOUSE AIM &nbsp;•&nbsp; LMB FIRE &nbsp;•&nbsp; SHIFT SPRINT &nbsp;•&nbsp; R RELOAD</p>
+      </div>
+    </section>
+    <section id="end-screen" class="screen"><div class="briefing-card"><p class="eyebrow" id="end-kicker">MISSION REPORT</p><h1 id="end-title">MISSION COMPLETE</h1><p id="end-copy"></p><button id="restart-btn">RUN IT AGAIN <span>ENTER</span></button></div></section>
+    <div id="hud" class="hidden">
+      <div class="hud-top"><div class="objective"><small>PRIMARY OBJECTIVE</small><strong id="objective">ELIMINATE HOSTILES</strong><div class="objective-bar"><i id="objective-progress"></i></div></div><div class="clock" id="timer">00:00</div></div>
+      <div class="crosshair"><i></i><i></i><i></i><i></i><b></b></div>
+      <div class="hud-bottom"><div class="health"><small>VITALS</small><strong id="health-value">100</strong><div class="health-bar"><i id="health-progress"></i></div></div><div class="weapon"><div><span>MK-18</span><b id="ammo">30 / 120</b></div><small>ASSAULT RIFLE</small></div></div>
+      <div id="toast"></div><div id="hit-marker">×</div>
+      <div id="map"><canvas id="minimap" width="170" height="170"></canvas></div>
+      <div id="damage-vignette"></div>
+    </div>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
