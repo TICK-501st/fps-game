@@ -14,7 +14,20 @@
         <p class="eyebrow">CLASSIFIED // TASK FORCE NEMESIS</p>
         <h1>OPERATION<br><span>NIGHTFALL</span></h1>
         <p class="mission-copy">Infiltrate the abandoned forward outpost, recover the intelligence drives, and eliminate hostile resistance before extraction.</p>
-        <div class="briefing-grid"><div><b>AO</b><span>Sector Kestrel</span></div><div><b>THREAT</b><span>Hostile patrols</span></div><div><b>STATUS</b><span>Blackout active</span></div></div>
+        <div class="briefing-grid">
+          <div><b>AO</b><span>Sector Kestrel</span></div>
+          <div><b>THREAT</b><span>Hostile patrols</span></div>
+          <div><b>STATUS</b><span>Blackout active</span></div>
+        </div>
+
+        <div id="map-picker" class="map-picker" aria-label="Map selection">
+          <button class="map-option active" data-map="0">Kestrel Yard</button>
+          <button class="map-option" data-map="1">Iron Line</button>
+          <button class="map-option" data-map="2">Echo Depot</button>
+          <button class="map-option" data-map="3">Stone Ridge</button>
+          <button class="map-option" data-map="4">Ghost Basin</button>
+        </div>
+
         <button id="start-btn">BEGIN OPERATION <span>ENTER</span></button>
         <p class="controls">WASD MOVE &nbsp;•&nbsp; MOUSE AIM &nbsp;•&nbsp; LMB FIRE &nbsp;•&nbsp; SHIFT SPRINT &nbsp;•&nbsp; R RELOAD</p>
       </div>
