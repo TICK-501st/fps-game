@@ -1,101 +1,551 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FPS Game 2.0</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <main id="game-shell">
-      <canvas id="game" aria-label="FPS Game 2.0"></canvas>
+/* Tactical map selector polish with hover motion */
+:root {
+  --bg: #070b0e;
+  --panel: rgba(12, 18, 22, 0.96);
+  --panel-alt: rgba(20, 28, 34, 0.96);
+  --line: rgba(138, 162, 177, 0.22);
+  --text: #eaf6ff;
+  --muted: #9aa8b6;
+  --accent: #7feaff;
+  --accent-2: #8ff7bc;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
 
-      <section id="briefing" class="screen active">
-        <div class="briefing-card">
-          <p class="eyebrow">OPERATION // REVISION 2.0</p>
-          <h1>FPS<br><span>GAME 2.0</span></h1>
-          <p class="mission-copy">
-            Enter the blacksite zone, recover the intel drives, and clear every hostile pocket before the extraction window closes.
-          </p>
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 8%, #1a2a36 0%, #0a1017 28%, #05090d 100%);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-          <div id="map-picker" class="map-picker" aria-label="Map selection">
-            <button class="map-option active" data-map="0">Neon Harbor</button>
-            <button class="map-option" data-map="1">Misty Rail</button>
-            <button class="map-option" data-map="2">Glass Foundry</button>
-            <button class="map-option" data-map="3">Granite Ridge</button>
-          </div>
+body {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
 
-          <div class="briefing-grid">
-            <div><b>ZONE</b><span id="brief-map-name">Neon Harbor</span></div>
-            <div><b>THREAT</b><span>Hostile squad</span></div>
-            <div><b>OBJ</b><span>Intel + clear</span></div>
-          </div>
+#game-shell {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #05080c;
+}
 
-          <button id="start-btn">BEGIN MISSION <span>ENTER</span></button>
-          <p class="controls">WASD MOVE &nbsp;•&nbsp; MOUSE AIM &nbsp;•&nbsp; LMB FIRE &nbsp;•&nbsp; SHIFT SPRINT &nbsp;•&nbsp; R RELOAD</p>
-        </div>
-      </section>
+#game {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#0b1319, #0d171b 48%, #0d1714 100%);
+  cursor: crosshair;
+}
 
-      <section id="end-screen" class="screen">
-        <div class="briefing-card end-card">
-          <p class="eyebrow" id="end-kicker">MISSION REPORT</p>
-          <h2 id="end-title">MISSION COMPLETE</h2>
-          <p id="end-copy">Objective accomplished.</p>
-          <button id="restart-btn">RETURN TO BRIEFING</button>
-        </div>
-      </section>
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  background: rgba(2, 8, 12, 0.66);
+  backdrop-filter: blur(4px);
+}
 
-      <div id="hud" class="hidden">
-        <div class="hud-top">
-          <div class="panel objective-panel">
-            <small>PRIMARY OBJECTIVE</small>
-            <strong id="objective">CLEAR NEON HARBOR HOSTILES</strong>
-            <div class="bar"><i id="objective-progress"></i></div>
-          </div>
+.screen.active {
+  display: grid;
+}
 
-          <div class="top-right">
-            <div class="panel timer-panel">
-              <small>TIMER</small>
-              <strong id="timer">00:00</strong>
-            </div>
-            <div class="panel stat-panel">
-              <small>KILLS</small>
-              <strong id="kills">0</strong>
-            </div>
-          </div>
-        </div>
+.briefing-card {
+  position: relative;
+  width: min(920px, calc(100vw - 48px));
+  padding: 32px 28px 24px;
+  border-radius: 26px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(13, 18, 24, 0.95), rgba(8, 12, 16, 0.97));
+  box-shadow: var(--shadow);
+}
 
-        <div class="crosshair" aria-hidden="true">
-          <i></i><i></i><i></i><i></i><b></b>
-        </div>
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.26em;
+  font-size: 10px;
+  font-weight: 700;
+}
 
-        <div class="hud-bottom">
-          <div class="panel health-panel">
-            <small>VITALS</small>
-            <strong id="health-value">100</strong>
-            <div class="bar health-bar"><i id="health-progress"></i></div>
-          </div>
+h1, h2 {
+  margin: 0;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
-          <div class="panel weapon-panel">
-            <small>WEAPON</small>
-            <strong>ARC RIFLE</strong>
-            <div class="weapon-meta">
-              <span id="ammo">30 / 120</span>
-              <span id="intel">0 / 2</span>
-            </div>
-          </div>
-        </div>
+h1 {
+  font-size: clamp(2.4rem, 5vw, 5.2rem);
+}
 
-        <div id="map" class="hidden">
-          <canvas id="minimap" width="170" height="170"></canvas>
-        </div>
+h2 {
+  font-size: clamp(1.3rem, 2vw, 1.9rem);
+}
 
-        <div id="toast"></div>
-        <div id="hit-marker">×</div>
-        <div id="damage-vignette"></div>
-      </div>
-    </main>
+h1 span { color: var(--accent); }
 
-    <script src="game.js"></script>
-  </body>
-</html>
+.mission-copy {
+  max-width: 60ch;
+  margin: 18px 0 0;
+  color: #b7c5d2;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.map-menu {
+  margin-top: 26px;
+  padding: 18px 18px 2px;
+  border-radius: 18px;
+  border: 1px solid rgba(136, 180, 200, 0.18);
+  background: linear-gradient(180deg, rgba(17, 23, 29, 0.8), rgba(12, 18, 22, 0.94));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.map-menu-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.map-counter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(120, 229, 255, 0.35);
+  background: rgba(16, 35, 42, 0.8);
+  color: var(--accent);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+}
+
+.map-counter b {
+  font-size: 13px;
+}
+
+.map-menu-subtitle {
+  margin: 0 0 16px;
+  color: #8ea0b0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.map-picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.map-option {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid rgba(132, 151, 171, 0.18);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(19, 27, 31, 0.86), rgba(12, 18, 24, 0.96));
+  color: #edf4ff;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease,
+    filter 0.22s ease;
+}
+
+.map-option::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(120, 229, 255, 0.15), transparent 40%, rgba(145, 247, 177, 0.08));
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.map-option:hover {
+  transform: translateY(-3px) scale(1.01);
+  border-color: rgba(120, 229, 255, 0.45);
+  box-shadow: 0 18px 30px rgba(2, 6, 9, 0.35);
+  filter: brightness(1.04);
+}
+
+.map-option:hover::before {
+  opacity: 1;
+}
+
+.map-option.active {
+  border-color: rgba(120, 229, 255, 0.7);
+  background: linear-gradient(180deg, rgba(19, 40, 49, 0.95), rgba(12, 20, 24, 0.98));
+  box-shadow: 0 20px 36px rgba(49, 119, 146, 0.26);
+}
+
+.map-option.active::before {
+  opacity: 1;
+}
+
+.map-option-number {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(120, 229, 255, 0.3);
+  background: rgba(9, 23, 29, 0.8);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.map-option-icon {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: rgba(120, 229, 255, 0.08);
+  color: var(--accent-2);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.map-option-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+}
+
+.map-option-copy strong {
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.map-option-copy small {
+  color: #9eb0bf;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.map-option-arrow {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--accent);
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.map-option:hover .map-option-arrow {
+  transform: translate(2px, -2px);
+}
+
+.briefing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 24px 0 18px;
+}
+
+.briefing-grid div {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(18, 23, 27, 0.72);
+}
+
+.briefing-grid b {
+  display: block;
+  margin-bottom: 6px;
+  color: #96a6b6;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.briefing-grid span {
+  font-size: 0.92rem;
+  color: #edf7ff;
+}
+
+#start-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 18px 22px;
+  border: 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent) 18%, var(--accent-2) 100%);
+  color: #071117;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 18px 36px rgba(120, 229, 255, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 42px rgba(120, 229, 255, 0.22);
+}
+
+#start-btn span {
+  color: rgba(7, 17, 23, 0.72);
+}
+
+.controls {
+  margin: 16px 0 0;
+  color: #9aa8b6;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+#hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hidden { display: none !important; }
+
+.hud-top, .hud-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 18px 20px;
+}
+
+.hud-top { top: 0; }
+.hud-bottom { bottom: 0; align-items: flex-end; }
+
+.objective, .timer, .health, .weapon {
+  padding: 10px 14px;
+  border: 1px solid rgba(130, 151, 173, 0.24);
+  border-radius: 12px;
+  background: rgba(8, 13, 17, 0.5);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.objective { max-width: min(52vw, 440px); }
+.objective-bar, .health-bar {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  margin-top: 10px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.objective-bar i, .health-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.objective-bar i {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+.health-bar i {
+  background: linear-gradient(90deg, #ff9d7d, #ff5f50, #d9ff79);
+}
+
+small {
+  display: block;
+  margin-bottom: 6px;
+  color: #9aa7b2;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+strong {
+  display: block;
+  color: #f2f5fa;
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.timer { min-width: 120px; }
+.health { min-width: 220px; }
+.weapon { min-width: 280px; }
+.weapon div {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 8px;
+  color: #f7d987;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.crosshair {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 32px;
+  height: 32px;
+  transform: translate(-50%, -50%);
+  opacity: 0.92;
+}
+
+.crosshair i, .crosshair b {
+  position: absolute;
+  display: block;
+}
+
+.crosshair i:nth-child(1) { left: 50%; top: 0; width: 2px; height: 8px; background: rgba(255,255,255,.9); transform: translateX(-50%); }
+.crosshair i:nth-child(2) { left: 50%; bottom: 0; width: 2px; height: 8px; background: rgba(255,255,255,.9); transform: translateX(-50%); }
+.crosshair i:nth-child(3) { left: 0; top: 50%; width: 8px; height: 2px; background: rgba(255,255,255,.9); transform: translateY(-50%); }
+.crosshair i:nth-child(4) { right: 0; top: 50%; width: 8px; height: 2px; background: rgba(255,255,255,.9); transform: translateY(-50%); }
+.crosshair b {
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.9);
+  transform: translate(-50%, -50%);
+}
+
+#toast {
+  position: absolute;
+  left: 50%;
+  bottom: 134px;
+  transform: translateX(-50%) translateY(10px);
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(120, 229, 255, 0.38);
+  background: rgba(12, 18, 22, 0.92);
+  color: #edf7ff;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+#hit-marker {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 44px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  text-shadow: 0 0 15px rgba(255,255,255,0.5);
+}
+
+#hit-marker.show { opacity: 1; }
+
+#map {
+  position: absolute;
+  right: 24px;
+  bottom: 110px;
+  width: 180px;
+  height: 180px;
+  padding: 4px;
+  border: 1px solid rgba(120, 229, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(8, 18, 15, 0.8);
+}
+
+#minimap {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+#damage-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, transparent 0%, rgba(255, 0, 0, 0.08) 100%);
+  opacity: 0;
+}
+
+@media (max-width: 780px) {
+  .briefing-card {
+    padding: 24px 18px 20px;
+  }
+
+  .map-picker {
+    grid-template-columns: 1fr;
+  }
+
+  .briefing-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .map-menu-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .hud-top, .hud-bottom {
+    padding: 14px;
+  }
+
+  .objective, .timer, .health, .weapon {
+    max-width: none;
+    min-width: 0;
+  }
+
+  .hud-top, .hud-bottom {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #map {
+    right: 18px;
+    bottom: 180px;
+  }
+}
