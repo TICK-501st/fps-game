@@ -1,26 +1,36 @@
-# Operation Nightfall
+# FPS Game 2.0
 
-A standalone military-themed browser FPS built with HTML5 Canvas and vanilla JavaScript.
+A polished browser-based first-person shooter built with HTML5 canvas and vanilla JavaScript.
 
-## Run
+## Play locally
 
-Open `index.html` in a modern browser, or serve the folder locally:
+Open `index.html` in a modern browser, or serve the project locally:
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Then visit <http://localhost:8080>.
+Then visit http://localhost:8080.
 
 ## Controls
 
-- **WASD** — move and strafe
-- **Mouse** — look / aim (click the game to capture the mouse)
-- **Left mouse button** — fire
-- **Shift** — sprint
-- **R** — reload
-- **Esc** — release the mouse
-- **M** — toggle tactical map
-- **Enter** — start/restart after briefing or defeat
+- W/A/S/D — move
+- Mouse — look/aim
+- Left click — shoot
+- Shift — sprint
+- R — reload
+- M — toggle tactical map
+- Esc — release pointer lock
+- Enter — begin/restart mission
 
-Clear the hostile patrols, collect intel, and reach extraction.
+## What is new in 2.0?
+
+- New tactical briefing and upgraded HUD
+- Multiple districts with unique enemy layouts
+- Better weapon feedback, pickups, and objective flow
+- Cleaner minimap and mission handling
+- More polished visual presentation and responsive UI
+
+## Mission objective
+
+Sweep each district, recover the intel drives, and clear hostile forces before extraction.
