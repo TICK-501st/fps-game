@@ -16,58 +16,72 @@
         <h1>OPERATION<br><span>NIGHTFALL</span></h1>
         <p class="mission-copy">Infiltrate the abandoned forward outpost, recover the intelligence drives, and eliminate hostile resistance before extraction.</p>
 
-        <div class="map-menu" aria-labelledby="map-menu-title">
-          <div class="map-menu-heading">
-            <div>
-              <p class="eyebrow">TACTICAL DEPLOYMENT</p>
-              <h2 id="map-menu-title">Choose your AO</h2>
-            </div>
-            <span class="map-counter"><b id="selected-map-number">01</b> / 05</span>
-          </div>
-          <p class="map-menu-subtitle">Select a zone to review its terrain before deployment.</p>
-
-          <div id="map-picker" class="map-picker" aria-label="Map selection">
-            <button class="map-option active" data-map="0" type="button">
-              <span class="map-option-number">01</span><span class="map-option-icon">⌁</span>
-              <span class="map-option-copy"><strong>Kestrel Yard</strong><small>Open industrial yard</small></span><span class="map-option-arrow">↗</span>
-            </button>
-            <button class="map-option" data-map="1" type="button">
-              <span class="map-option-number">02</span><span class="map-option-icon">▥</span>
-              <span class="map-option-copy"><strong>Iron Line</strong><small>Narrow rail-cut choke points</small></span><span class="map-option-arrow">↗</span>
-            </button>
-            <button class="map-option" data-map="2" type="button">
-              <span class="map-option-number">03</span><span class="map-option-icon">▦</span>
-              <span class="map-option-copy"><strong>Echo Depot</strong><small>Close-quarters warehouse ruins</small></span><span class="map-option-arrow">↗</span>
-            </button>
-            <button class="map-option" data-map="3" type="button">
-              <span class="map-option-number">04</span><span class="map-option-icon">△</span>
-              <span class="map-option-copy"><strong>Stone Ridge</strong><small>High ground and rocky cover</small></span><span class="map-option-arrow">↗</span>
-            </button>
-            <button class="map-option" data-map="4" type="button">
-              <span class="map-option-number">05</span><span class="map-option-icon">◌</span>
-              <span class="map-option-copy"><strong>Ghost Basin</strong><small>Low-light broken sight lines</small></span><span class="map-option-arrow">↗</span>
-            </button>
-          </div>
-        </div>
-
         <div class="briefing-grid">
-          <div><b>AO</b><span id="brief-map-name">Sector Kestrel</span></div>
+          <div><b>AO</b><span>Sector Kestrel</span></div>
           <div><b>THREAT</b><span>Hostile patrols</span></div>
           <div><b>STATUS</b><span>Blackout active</span></div>
         </div>
+
+        <div id="map-picker" class="map-picker" aria-label="Map selection">
+          <button class="map-option active" data-map="0">Kestrel Yard</button>
+          <button class="map-option" data-map="1">Iron Line</button>
+          <button class="map-option" data-map="2">Echo Depot</button>
+          <button class="map-option" data-map="3">Stone Ridge</button>
+          <button class="map-option" data-map="4">Ghost Basin</button>
+        </div>
+
         <button id="start-btn">BEGIN OPERATION <span>ENTER</span></button>
         <p class="controls">WASD MOVE &nbsp;•&nbsp; MOUSE AIM &nbsp;•&nbsp; LMB FIRE &nbsp;•&nbsp; SHIFT SPRINT &nbsp;•&nbsp; R RELOAD</p>
       </div>
     </section>
 
-    <section id="end-screen" class="screen"><div class="briefing-card"><p class="eyebrow" id="end-kicker">MISSION REPORT</p><h1 id="end-title">MISSION COMPLETE</h1><p id="end-copy"></p><button id="restart-btn">RESTART</button></div></section>
+    <section id="end-screen" class="screen">
+      <div class="briefing-card">
+        <p class="eyebrow" id="end-kicker">MISSION REPORT</p>
+        <h1 id="end-title">MISSION COMPLETE</h1>
+        <p id="end-copy"></p>
+        <button id="restart-btn">RESTART</button>
+      </div>
+    </section>
+
     <div id="hud" class="hidden">
-      <div class="hud-top"><div class="objective"><small>PRIMARY OBJECTIVE</small><strong id="objective">ELIMINATE HOSTILES</strong><div class="objective-bar"><i id="objective-progress"></i></div></div><div class="timer"><small>TIMER</small><strong id="timer">00:00</strong></div></div>
+      <div class="hud-top">
+        <div class="objective">
+          <small>PRIMARY OBJECTIVE</small>
+          <strong id="objective">ELIMINATE HOSTILES</strong>
+          <div class="objective-bar"><i id="objective-progress"></i></div>
+        </div>
+        <div class="timer">
+          <small>TIMER</small>
+          <strong id="timer">00:00</strong>
+        </div>
+      </div>
+
       <div class="crosshair"><i></i><i></i><i></i><i></i><b></b></div>
-      <div class="hud-bottom"><div class="health"><small>VITALS</small><strong id="health-value">100</strong><div class="health-bar"><i id="health-progress"></i></div></div><div class="weapon"><small>WEAPON</small><strong>ARC RIFLE</strong><div><span id="ammo">30 / 120</span><span id="intel">0 / 2</span></div></div></div>
-      <div id="toast"></div><div id="hit-marker">×</div><div id="map"><canvas id="minimap" width="170" height="170"></canvas></div><div id="damage-vignette"></div>
+
+      <div class="hud-bottom">
+        <div class="health">
+          <small>VITALS</small>
+          <strong id="health-value">100</strong>
+          <div class="health-bar"><i id="health-progress"></i></div>
+        </div>
+        <div class="weapon">
+          <small>WEAPON</small>
+          <strong>RIFLE</strong>
+          <div class="weapon-meta">
+            <span id="ammo">30 / 120</span>
+            <span id="intel">0 / 2</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="toast"></div>
+      <div id="hit-marker">×</div>
+      <div id="map"><canvas id="minimap" width="170" height="170"></canvas></div>
+      <div id="damage-vignette"></div>
     </div>
   </main>
+
   <script src="game.js"></script>
   <script src="enemy-squad-ai.js"></script>
 </body>
